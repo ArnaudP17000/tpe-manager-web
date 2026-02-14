@@ -33,7 +33,8 @@ const TPEForm = () => {
     if (isEdit) {
       loadTPE();
     }
-  }, [id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEdit]);
 
   const loadTPE = async () => {
     setLoading(true);
