@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { tpeAPI } from '../services/api';
 import { toast } from 'react-toastify';
@@ -19,11 +19,7 @@ const TPEList = () => {
   
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadTpes();
-  }, [page, search, tpeModel, connectionType]);
-
-  const loadTpes = async () => {
+  const loadTpes = useCallback(async () => {
     setLoading(true);
     try {
       const params = {
@@ -44,7 +40,11 @@ const TPEList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, pageSize, search, tpeModel, connectionType]);
+
+  useEffect(() => {
+    loadTpes();
+  }, [loadTpes]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this TPE?')) {
