@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { tpeAPI } from '../services/api';
 import { toast } from 'react-toastify';
@@ -29,14 +29,7 @@ const TPEForm = () => {
     backoffice_email: '',
   });
 
-  useEffect(() => {
-    if (isEdit) {
-      loadTPE();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, isEdit]);
-
-  const loadTPE = async () => {
+  const loadTPE = useCallback(async () => {
     setLoading(true);
     try {
       const data = await tpeAPI.getById(id);
@@ -47,7 +40,13 @@ const TPEForm = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    if (isEdit) {
+      loadTPE();
+    }
+  }, [isEdit, loadTPE]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
